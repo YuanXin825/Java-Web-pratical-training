@@ -11,14 +11,12 @@ import java.util.List;
 
 public class NoticeDao extends BaseDao {
 
-    // 新增公告
     public int addNotice(Notice notice) {
-        String sql = "INSERT INTO notice(admin_id,title,content,create_time,is_top) VALUES(?,?,?,NOW(),?)";
-        Object[] params = {notice.getAdminId(), notice.getTitle(), notice.getContent(), notice.getIsTop()};
+        String sql = "INSERT INTO notice(title,content,create_time,publisher) VALUES(?,?,NOW(),?)";
+        Object[] params = {notice.getTitle(), notice.getContent(), notice.getPublisher()};
         return executeUpdate(sql, params);
     }
 
-    // 根据ID查询公告
     public Notice findNoticeById(Integer id) {
         String sql = "SELECT * FROM notice WHERE id=?";
         Connection conn = null;
@@ -33,11 +31,10 @@ public class NoticeDao extends BaseDao {
             if (rs.next()) {
                 n = new Notice();
                 n.setId(rs.getInt("id"));
-                n.setAdminId(rs.getInt("admin_id"));
                 n.setTitle(rs.getString("title"));
                 n.setContent(rs.getString("content"));
                 n.setCreateTime(rs.getDate("create_time"));
-                n.setIsTop(rs.getInt("is_top"));
+                n.setPublisher(rs.getString("publisher"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,10 +44,9 @@ public class NoticeDao extends BaseDao {
         return n;
     }
 
-    // 查询所有公告（置顶优先）
     public List<Notice> findAllNotice() {
         List<Notice> list = new ArrayList<>();
-        String sql = "SELECT * FROM notice ORDER BY is_top DESC,create_time DESC";
+        String sql = "SELECT * FROM notice ORDER BY create_time DESC";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -61,11 +57,10 @@ public class NoticeDao extends BaseDao {
             while (rs.next()) {
                 Notice n = new Notice();
                 n.setId(rs.getInt("id"));
-                n.setAdminId(rs.getInt("admin_id"));
                 n.setTitle(rs.getString("title"));
                 n.setContent(rs.getString("content"));
                 n.setCreateTime(rs.getDate("create_time"));
-                n.setIsTop(rs.getInt("is_top"));
+                n.setPublisher(rs.getString("publisher"));
                 list.add(n);
             }
         } catch (Exception e) {
@@ -76,14 +71,12 @@ public class NoticeDao extends BaseDao {
         return list;
     }
 
-    // 修改公告
     public int updateNotice(Notice notice) {
-        String sql = "UPDATE notice SET title=?,content=?,is_top=? WHERE id=?";
-        Object[] params = {notice.getTitle(), notice.getContent(), notice.getIsTop(), notice.getId()};
+        String sql = "UPDATE notice SET title=?,content=?,publisher=? WHERE id=?";
+        Object[] params = {notice.getTitle(), notice.getContent(), notice.getPublisher(), notice.getId()};
         return executeUpdate(sql, params);
     }
 
-    // 删除公告
     public int deleteNotice(Integer id) {
         String sql = "DELETE FROM notice WHERE id=?";
         return executeUpdate(sql, id);

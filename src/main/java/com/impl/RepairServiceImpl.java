@@ -12,8 +12,7 @@ public class RepairServiceImpl implements RepairService {
 
     @Override
     public void addRepair(Repair repair) {
-        // 默认：待处理
-        repair.setStatus(0);
+        repair.setStatus("待处理");
         repairDao.addRepair(repair);
     }
 

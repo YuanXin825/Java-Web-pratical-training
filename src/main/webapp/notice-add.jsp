@@ -6,7 +6,6 @@
 <body>
 <h2>新增公告</h2>
 <form action="notice?action=add" method="post">
-  <input type="hidden" name="adminId" value="1"> <%-- 管理员ID，从session取 --%>
   <table>
     <tr>
       <td>标题：</td>
@@ -17,13 +16,8 @@
       <td><textarea name="content" rows="5" cols="30" required></textarea></td>
     </tr>
     <tr>
-      <td>是否置顶：</td>
-      <td>
-        <select name="isTop">
-          <option value="0">否</option>
-          <option value="1">是</option>
-        </select>
-      </td>
+      <td>发布人：</td>
+      <td><input type="text" name="publisher" required></td>
     </tr>
     <tr>
       <td colspan="2"><input type="submit" value="发布"></td>

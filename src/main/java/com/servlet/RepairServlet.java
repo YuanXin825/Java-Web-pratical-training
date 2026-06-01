@@ -27,31 +27,26 @@ public class RepairServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
-        // 1. 业主提交报修
         if ("add".equals(action)) {
-            Integer residentId = Integer.valueOf(request.getParameter("residentId"));
             String title = request.getParameter("title");
             String content = request.getParameter("content");
-            Integer type = Integer.valueOf(request.getParameter("type"));
+            Integer userId = Integer.valueOf(request.getParameter("userId"));
 
             Repair repair = new Repair();
-            repair.setResidentId(residentId);
             repair.setTitle(title);
             repair.setContent(content);
-            repair.setType(type);
+            repair.setUserId(userId);
 
             repairService.addRepair(repair);
             response.sendRedirect("repair?action=list");
         }
 
-        // 2. 报修列表
         else if ("list".equals(action)) {
             List<Repair> list = repairService.getAllRepair();
             request.setAttribute("repairList", list);
             request.getRequestDispatcher("repair-list.jsp").forward(request, response);
         }
 
-        // 3. 跳转到处理页面
         else if ("toDeal".equals(action)) {
             Integer id = Integer.valueOf(request.getParameter("id"));
             Repair repair = repairService.getRepairById(id);
@@ -59,22 +54,18 @@ public class RepairServlet extends HttpServlet {
             request.getRequestDispatcher("repair-deal.jsp").forward(request, response);
         }
 
-        // 4. 物业处理报修
         else if ("deal".equals(action)) {
             Integer id = Integer.valueOf(request.getParameter("id"));
-            Integer status = Integer.valueOf(request.getParameter("status"));
-            String remark = request.getParameter("remark");
+            String status = request.getParameter("status");
 
             Repair repair = new Repair();
             repair.setId(id);
             repair.setStatus(status);
-            repair.setRemark(remark);
 
             repairService.updateRepair(repair);
             response.sendRedirect("repair?action=list");
         }
 
-        // 5. 删除报修
         else if ("delete".equals(action)) {
             Integer id = Integer.valueOf(request.getParameter("id"));
             repairService.deleteRepair(id);

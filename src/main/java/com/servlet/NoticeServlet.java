@@ -27,31 +27,26 @@ public class NoticeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
-        // 1. 新增公告
         if ("add".equals(action)) {
-            Integer adminId = Integer.valueOf(request.getParameter("adminId"));
             String title = request.getParameter("title");
             String content = request.getParameter("content");
-            Integer isTop = Integer.valueOf(request.getParameter("isTop"));
+            String publisher = request.getParameter("publisher");
 
             Notice notice = new Notice();
-            notice.setAdminId(adminId);
             notice.setTitle(title);
             notice.setContent(content);
-            notice.setIsTop(isTop);
+            notice.setPublisher(publisher);
 
             noticeService.addNotice(notice);
             response.sendRedirect("notice?action=list");
         }
 
-        // 2. 公告列表
         else if ("list".equals(action)) {
             List<Notice> list = noticeService.getAllNotice();
             request.setAttribute("noticeList", list);
             request.getRequestDispatcher("notice-list.jsp").forward(request, response);
         }
 
-        // 3. 跳转到编辑
         else if ("toEdit".equals(action)) {
             Integer id = Integer.valueOf(request.getParameter("id"));
             Notice notice = noticeService.getNoticeById(id);
@@ -59,24 +54,22 @@ public class NoticeServlet extends HttpServlet {
             request.getRequestDispatcher("notice-edit.jsp").forward(request, response);
         }
 
-        // 4. 更新公告
         else if ("update".equals(action)) {
             Integer id = Integer.valueOf(request.getParameter("id"));
             String title = request.getParameter("title");
             String content = request.getParameter("content");
-            Integer isTop = Integer.valueOf(request.getParameter("isTop"));
+            String publisher = request.getParameter("publisher");
 
             Notice notice = new Notice();
             notice.setId(id);
             notice.setTitle(title);
             notice.setContent(content);
-            notice.setIsTop(isTop);
+            notice.setPublisher(publisher);
 
             noticeService.updateNotice(notice);
             response.sendRedirect("notice?action=list");
         }
 
-        // 5. 删除公告
         else if ("delete".equals(action)) {
             Integer id = Integer.valueOf(request.getParameter("id"));
             noticeService.deleteNotice(id);
