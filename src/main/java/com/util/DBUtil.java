@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DBUtil {
     // 数据库连接信息（改成你自己的）
-    private static final String URL = "jdbc:mysql://localhost:3306/property_manage（新）?useSSL=false&serverTimezone=UTC&characterEncoding=utf8";
+    private static final String URL = "jdbc:mysql://localhost:3306/property_manage（新）?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8";
     private static final String USER = "root";
     private static final String PASSWORD = "240825Tjczlw";
 

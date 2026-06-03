@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/WEB-INF/date-fmt.jspf" %>
 <html>
 <head>
   <title>报修投诉列表</title>
@@ -35,7 +37,7 @@
         <td>${r.userId}</td>
       </c:if>
       <td>${r.status}</td>
-      <td>${r.createTime}</td>
+      <td><fmt:formatDate value="${r.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
       <td>
         <a href="repair?action=detail&id=${r.id}">查看</a>
         <c:if test="${isAdmin}">

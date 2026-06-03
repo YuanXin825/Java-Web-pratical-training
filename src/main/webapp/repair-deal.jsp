@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/WEB-INF/date-fmt.jspf" %>
 <html>
 <head>
   <title>处理报修</title>
@@ -28,7 +30,7 @@
     </tr>
     <tr>
       <td>提交时间：</td>
-      <td>${repair.createTime}</td>
+      <td><fmt:formatDate value="${repair.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
     </tr>
     <tr>
       <td>当前状态：</td>

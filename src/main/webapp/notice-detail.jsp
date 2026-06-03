@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/WEB-INF/date-fmt.jspf" %>
 <html>
 <head>
   <title>公告详情</title>
@@ -19,9 +21,9 @@
 <div class="meta">
   分类：${empty notice.categoryName ? '未分类' : notice.categoryName}
   &nbsp;|&nbsp; 发布人：${notice.publisher}
-  &nbsp;|&nbsp; 发布时间：${notice.createTime}
+  &nbsp;|&nbsp; 发布时间：<fmt:formatDate value="${notice.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
   <c:if test="${not empty notice.updateTime}">
-    &nbsp;|&nbsp; 更新时间：${notice.updateTime}
+    &nbsp;|&nbsp; 更新时间：<fmt:formatDate value="${notice.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
   </c:if>
 </div>
 

@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/WEB-INF/date-fmt.jspf" %>
 <html>
 <head>
   <title>公告通知</title>
@@ -54,7 +56,7 @@
         </c:if>
       </td>
       <td>${n.publisher}</td>
-      <td>${n.createTime}</td>
+      <td><fmt:formatDate value="${n.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
       <c:if test="${role == 'owner'}">
         <td>
           <c:if test="${n.unread}">
