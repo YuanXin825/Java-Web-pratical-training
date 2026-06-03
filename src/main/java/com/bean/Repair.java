@@ -1,25 +1,21 @@
-package com.entity;
+package com.bean;
 
 import java.util.Date;
 
 public class Repair {
     private Integer id;
     private String title;
+    private String type;
     private String content;
     private Date createTime;
+    private Date updateTime;
     private String status;
+    private String reply;
+    private Integer rating;
+    private String evaluation;
     private Integer userId;
 
     public Repair() {}
-
-    public Repair(Integer id, String title, String content, Date createTime, String status, Integer userId) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.createTime = createTime;
-        this.status = status;
-        this.userId = userId;
-    }
 
     public Integer getId() {
         return id;
@@ -35,6 +31,14 @@ public class Repair {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getContent() {
@@ -53,12 +57,44 @@ public class Repair {
         this.createTime = createTime;
     }
 
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public String getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(String evaluation) {
+        this.evaluation = evaluation;
     }
 
     public Integer getUserId() {

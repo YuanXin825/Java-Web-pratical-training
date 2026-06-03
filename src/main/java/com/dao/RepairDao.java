@@ -1,20 +1,41 @@
 package com.dao;
 
-import com.entity.Repair;
+import com.bean.Repair;
 import com.util.DBUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepairDao extends BaseDao {
 
+    private Repair mapRepair(ResultSet rs) throws Exception {
+        Repair r = new Repair();
+        r.setId(rs.getInt("id"));
+        r.setTitle(rs.getString("title"));
+        r.setType(rs.getString("type"));
+        r.setContent(rs.getString("content"));
+        r.setCreateTime(rs.getTimestamp("create_time"));
+        Timestamp updateTime = rs.getTimestamp("update_time");
+        r.setUpdateTime(updateTime);
+        r.setStatus(rs.getString("status"));
+        r.setReply(rs.getString("reply"));
+        int rating = rs.getInt("rating");
+        r.setRating(rs.wasNull() ? null : rating);
+        r.setEvaluation(rs.getString("evaluation"));
+        r.setUserId(rs.getInt("user_id"));
+        return r;
+    }
+
     public int addRepair(Repair repair) {
-        String sql = "INSERT INTO repair(title,content,create_time,status,user_id) VALUES(?,?,NOW(),?,?)";
+        String sql = "INSERT INTO repair(title, type, content, create_time, update_time, status, user_id) "
+                + "VALUES(?, ?, ?, NOW(), NOW(), ?, ?)";
         Object[] params = {
                 repair.getTitle(),
+                repair.getType(),
                 repair.getContent(),
                 repair.getStatus(),
                 repair.getUserId()
@@ -27,48 +48,46 @@ public class RepairDao extends BaseDao {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        Repair r = null;
         try {
             conn = DBUtil.getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             rs = pstmt.executeQuery();
             if (rs.next()) {
-                r = new Repair();
-                r.setId(rs.getInt("id"));
-                r.setTitle(rs.getString("title"));
-                r.setContent(rs.getString("content"));
-                r.setCreateTime(rs.getDate("create_time"));
-                r.setStatus(rs.getString("status"));
-                r.setUserId(rs.getInt("user_id"));
+                return mapRepair(rs);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             DBUtil.close(conn, pstmt, rs);
         }
-        return r;
+        return null;
     }
 
     public List<Repair> findAllRepair() {
+        return queryList("SELECT * FROM repair ORDER BY create_time DESC");
+    }
+
+    public List<Repair> findRepairByUserId(Integer userId) {
+        return queryList("SELECT * FROM repair WHERE user_id=? ORDER BY create_time DESC", userId);
+    }
+
+    private List<Repair> queryList(String sql, Object... params) {
         List<Repair> list = new ArrayList<>();
-        String sql = "SELECT * FROM repair ORDER BY create_time DESC";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
             conn = DBUtil.getConnection();
             pstmt = conn.prepareStatement(sql);
+            if (params != null) {
+                for (int i = 0; i < params.length; i++) {
+                    pstmt.setObject(i + 1, params[i]);
+                }
+            }
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                Repair r = new Repair();
-                r.setId(rs.getInt("id"));
-                r.setTitle(rs.getString("title"));
-                r.setContent(rs.getString("content"));
-                r.setCreateTime(rs.getDate("create_time"));
-                r.setStatus(rs.getString("status"));
-                r.setUserId(rs.getInt("user_id"));
-                list.add(r);
+                list.add(mapRepair(rs));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,13 +98,22 @@ public class RepairDao extends BaseDao {
     }
 
     public int updateRepair(Repair repair) {
-        String sql = "UPDATE repair SET status=? WHERE id=?";
-        Object[] params = {repair.getStatus(), repair.getId()};
+        String sql = "UPDATE repair SET status=?, reply=?, update_time=NOW() WHERE id=?";
+        Object[] params = {repair.getStatus(), repair.getReply(), repair.getId()};
         return executeUpdate(sql, params);
     }
 
+    public int evaluateRepair(Integer id, Integer userId, Integer rating, String evaluation) {
+        String sql = "UPDATE repair SET rating=?, evaluation=?, update_time=NOW() "
+                + "WHERE id=? AND user_id=? AND status='已完成' AND rating IS NULL";
+        return executeUpdate(sql, rating, evaluation, id, userId);
+    }
+
     public int deleteRepair(Integer id) {
-        String sql = "DELETE FROM repair WHERE id=?";
-        return executeUpdate(sql, id);
+        return executeUpdate("DELETE FROM repair WHERE id=?", id);
+    }
+
+    public int deleteRepairByOwner(Integer id, Integer userId) {
+        return executeUpdate("DELETE FROM repair WHERE id=? AND user_id=? AND status='待处理'", id, userId);
     }
 }
